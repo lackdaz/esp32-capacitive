@@ -1,8 +1,20 @@
 #include <Arduino.h>
+#include <TaskScheduler.h>
 
 double x; // global variables
 
 #define TOUCH_PIN 13
+
+Scheduler ts;
+
+void touch();
+
+Task task_touch(TASK_MILLISECOND * 100 , TASK_FOREVER, &touch, &ts, true );
+
+void touch() {
+  x = touchRead(TOUCH_PIN);
+  Serial.println(x);
+}
 
 void setup() {
   Serial.begin(115200);
@@ -12,8 +24,5 @@ void setup() {
 }
 
 void loop() {
-  x = touchRead(TOUCH_PIN);
-  Serial.println(x);
-  // p.Plot();
-  delay(100);
+  ts.execute();
 }
